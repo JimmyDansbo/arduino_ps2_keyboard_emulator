@@ -168,6 +168,12 @@ void CtrlAltDelete() {
   keyboard.keyboard_release(PS2dev::LEFT_CONTROL);
 }
 
+void writeSpecial(unsigned char ch) {
+  keyboard.keyboard_press_special(ch);
+  delay(2);
+  keyboard.keyboard_release_special(ch);
+}
+
 void handleChars() {
   Serial.println(incomingByte);
   switch (incomingByte) {
@@ -249,7 +255,7 @@ void handleChars() {
     case ' ':  writeNormal(PS2dev::SPACE);        break;
     case '*':  writeNormal(PS2dev::ASTERISK);     break;
     case '+':  writeNormal(PS2dev::PLUS);         break;
-    case '\'': writeNormal(PS2dev::ACCENT);    break;
+    case '\'': writeNormal(PS2dev::TICK_MARK);    break;
     case '"':  writeShifted(PS2dev::TICK_MARK);   break;
     case '@':  writeShifted(PS2dev::TWO);         break;
     case '$':  writeShifted(PS2dev::FOUR);        break;
@@ -262,6 +268,7 @@ void handleChars() {
     case ']':  writeNormal(PS2dev::CLOSE_BRACKET);break;
     case '(':  writeShifted(PS2dev::NINE);        break;
     case ')':  writeShifted(PS2dev::ZERO);        break;
+    case 127:  writeSpecial(PS2dev::DELETE);      break;
   }
 }
 
@@ -287,16 +294,6 @@ void loop() {
       } else {
         handleChars();
       }
-//      Serial.print("ASCII: 0x");
-//      Serial.print(incomingByte, HEX);
-//      incomingByte = asciiToScanCode(incomingByte);
-      
-//      keyboard.write(incomingByte);      
-//      keyboard.keyboard_press(incomingByte);
-//      delay(5);
-//      keyboard.keyboard_release(incomingByte);
-//      Serial.print(" Scan: 0x");
-//      Serial.println(incomingByte, HEX);
     }
   }
 }
